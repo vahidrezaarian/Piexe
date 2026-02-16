@@ -16,3 +16,6 @@ Piexe is a lightweight, completely offline Windows app that helps you instantly 
 ### No internet connection • No data collection • No telemetry • 100% local processing
 
 ### Perfect for quickly grabbing text from memes, receipts, documents, whiteboards, or scanning any kind of code without uploading anything anywhere.
+
+## Release
+[Version 1.0.0 in Microsoft Store](https://apps.microsoft.com/detail/9NT76K6NQGQC)
