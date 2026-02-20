@@ -80,6 +80,7 @@ namespace Piexe
         private bool _selectionAborted = false;
         private Point _startPoint;
         private bool _analyze = true;
+        private Rect? _currentSelectingRectangle;
 
         public ScreenshotTaker()
         {
@@ -213,6 +214,15 @@ namespace Piexe
             ScreenshotToggleButton.Background = Brushes.DeepSkyBlue;
         }
 
+        private void ResetSelection()
+        {
+            _selectionAborted = true;
+            SelectingRectangle.Clip = new RectangleGeometry(new Rect(0, 0, Width, Height));
+            ToolBarBorder.Visibility = Visibility.Visible;
+            _currentSelectingRectangle = null;
+            SelectingRectangleStroke.Visibility = Visibility.Collapsed;
+        }
+
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
             if (CaptureButton.IsMouseOver || AnalyzeToggleButton.IsMouseOver || ScreenshotToggleButton.IsMouseOver)
@@ -249,11 +259,22 @@ namespace Piexe
         {
             if (_mouseDown && !_selectionAborted)
             {
-                SelectingRectangle.Clip = new CombinedGeometry(new RectangleGeometry(new Rect(0, 0, Width, Height)),
-                    new RectangleGeometry(new Rect(_startPoint, e.GetPosition(this))))
+                _currentSelectingRectangle = new Rect(_startPoint, e.GetPosition(this));
+
+                var wholeScreenGeometry = new RectangleGeometry(new Rect(0, 0, Width, Height));
+                var selectedGeometry = new RectangleGeometry(_currentSelectingRectangle.Value);
+
+                SelectingRectangle.Clip = new CombinedGeometry(wholeScreenGeometry, selectedGeometry)
                 {
                     GeometryCombineMode = GeometryCombineMode.Xor
                 };
+
+                SelectingRectangleStroke.Data = new CombinedGeometry(wholeScreenGeometry, selectedGeometry)
+                {
+                    GeometryCombineMode = GeometryCombineMode.Exclude
+                };
+
+                SelectingRectangleStroke.Visibility = Visibility.Visible;
             }
             base.OnMouseMove(e);
         }
@@ -264,9 +285,7 @@ namespace Piexe
             {
                 if (_mouseDown)
                 {
-                    _selectionAborted = true;
-                    SelectingRectangle.Clip = new RectangleGeometry(new Rect(0, 0, Width, Height));
-                    ToolBarBorder.Visibility = Visibility.Visible;
+                    ResetSelection();
                 }
                 else
                 {
@@ -280,9 +299,7 @@ namespace Piexe
         {
             if (_mouseDown)
             {
-                _selectionAborted = true;
-                SelectingRectangle.Clip = new RectangleGeometry(new Rect(0, 0, Width, Height));
-                ToolBarBorder.Visibility = Visibility.Visible;
+                ResetSelection();
             }
             base.OnMouseRightButtonDown(e);
         }

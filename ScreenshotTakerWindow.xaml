@@ -22,6 +22,10 @@
                 <SolidColorBrush Color="Black" Opacity="0.5"/>
             </Rectangle.Fill>
         </Rectangle>
+        <Path x:Name="SelectingRectangleStroke"
+              Fill="Transparent"
+              Stroke="Red" StrokeThickness="1"
+              Visibility="Collapsed"/>
         <Border BorderBrush="Black" BorderThickness="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="10">
             <Border.Effect>
                 <DropShadowEffect Color="CornflowerBlue" Direction="0" ShadowDepth="0" BlurRadius="10" Opacity="1"/>
